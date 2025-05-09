@@ -304,13 +304,30 @@ if st.session_state.data_loaded:
             # Metrics for home win percentage
             for i, period in enumerate(periods):
                 period_data = home_advantage_metrics[home_advantage_metrics['period'] == period]
+                
+                # Handle potential NaN values
+                if period_data.empty or pd.isna(period_data['home_win_pct'].values[0]):
+                    home_win_pct = "No data"
+                else:
+                    home_win_pct = f"{period_data['home_win_pct'].values[0]:.1f}%"
+                    
+                if period_data.empty or pd.isna(period_data['away_win_pct'].values[0]):
+                    away_win_pct = "No data"
+                else:
+                    away_win_pct = f"{period_data['away_win_pct'].values[0]:.1f}%"
+                    
+                if period_data.empty or pd.isna(period_data['home_advantage'].values[0]):
+                    home_advantage = "No data"
+                else:
+                    home_advantage = f"{period_data['home_advantage'].values[0]:.1f}%"
+                
                 with cols[i]:
                     st.markdown(f"""
                     <div class="metric-card">
                         <h3>{period}</h3>
-                        <p>Home Win %: <b>{period_data['home_win_pct'].values[0]:.1f}%</b></p>
-                        <p>Away Win %: <b>{period_data['away_win_pct'].values[0]:.1f}%</b></p>
-                        <p>Home Advantage: <b>{period_data['home_advantage'].values[0]:.1f}%</b></p>
+                        <p>Home Win %: <b>{home_win_pct}</b></p>
+                        <p>Away Win %: <b>{away_win_pct}</b></p>
+                        <p>Home Advantage: <b>{home_advantage}</b></p>
                     </div>
                     """, unsafe_allow_html=True)
             
@@ -869,20 +886,28 @@ else:
     
     st.subheader("Featured Teams")
     
-    # Team logos in a grid layout - updated with more reliable URLs
+    # Current Premier League team logos in a grid layout with reliable URLs
     team_logos = {
-        "Manchester United": "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg",
+        "Arsenal": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
+        "Aston Villa": "https://www.avfc.co.uk/logo.svg",
+        "Bournemouth": "https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg",
+        "Brentford": "https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg",
+        "Brighton & Hove Albion": "https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg",
+        "Chelsea": "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
+        "Crystal Palace": "https://resources.premierleague.com/premierleague/badges/t31.png",
+        "Everton": "https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg",
+        "Fulham": "https://upload.wikimedia.org/wikipedia/en/e/eb/Fulham_FC_%28shield%29.svg",
+        "Ipswich Town": "https://resources.premierleague.com/premierleague/badges/t40.png",
+        "Leicester City": "https://upload.wikimedia.org/wikipedia/en/2/2d/Leicester_City_crest.svg",
         "Liverpool": "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
         "Manchester City": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
-        "Chelsea": "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
-        "Arsenal": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
+        "Manchester United": "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg",
+        "Newcastle United": "https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg",
+        "Nottingham Forest": "https://upload.wikimedia.org/wikipedia/en/e/e5/Nottingham_Forest_F.C._logo.svg",
+        "Southampton": "https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg",
         "Tottenham Hotspur": "https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg",
-        "Real Madrid": "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
-        "Barcelona": "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg",
-        "Bayern Munich": "https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg",
-        "PSG": "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg",
-        # Using the provided URL for Juventus logo
-        "Juventus": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Juventus_FC_-_logo_black_%28Italy%2C_2020%29.svg/800px-Juventus_FC_-_logo_black_%28Italy%2C_2020%29.svg.png",
+        "West Ham United": "https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg",
+        "Wolverhampton Wanderers": "https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg"
     }
     
     # Create team logo display with native Streamlit columns
